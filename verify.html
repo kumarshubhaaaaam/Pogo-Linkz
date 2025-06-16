@@ -104,7 +104,7 @@
 
     const verifiedUntil = localStorage.getItem(accessKey);
     if (verifiedUntil && Date.now() < Number(verifiedUntil)) {
-      window.location.href = `https://sankilinkz.netlify.app/access-granted.html?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title || "")}`;
+      window.location.href = `https://pogolinkz.netlify.app/access-granted.html?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title || "")}`;
     }
 
     async function generateAdLink() {
@@ -113,7 +113,7 @@
         return;
       }
 
-      const finalRedirect = `https://sankilinkz.netlify.app/access-granted.html?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title || "")}`;
+      const finalRedirect = `https://pogolinkz.netlify.app/access-granted.html?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title || "")}`;
       const apiToken = 'b253865141e0363f5899f0a69e74772db28f0558';
       const shortUrlApi = `https://linkshortify.com/api?api=${apiToken}&url=${encodeURIComponent(finalRedirect)}`;
 
