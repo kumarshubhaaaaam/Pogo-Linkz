@@ -57,34 +57,31 @@
     }
 
     .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
       gap: 2rem;
-      padding: 0 2rem;
+      padding: 0 1rem;
     }
-.grid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 2rem;
-  padding: 0 1rem;
-}
 
-.card {
-  max-width: 320px;
-  flex: 1 1 300px;
-}
     .card {
+      max-width: 550px;
+      flex: 1 1 500px;
       background-color: #1c1c1c;
-      padding: 1rem;
+      padding: 0.8rem;
       border-radius: 0.75rem;
-      text-align: center;
       border: 2px solid transparent;
       opacity: 1;
       transform: scale(1);
       pointer-events: auto;
       user-select: none;
       transition: transform 0.3s ease, box-shadow 0.3s ease, border 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-direction: row;
+      text-decoration: none;
+      color: white;
     }
 
     .card:hover {
@@ -93,40 +90,31 @@
       border: 2px solid #00d2fc;
     }
 
-.card img {
-  width: 100%;
-  height: 120px;
-  object-fit: cover;
-  border-radius: 0.5rem;
-  margin-bottom: 1rem;
-  pointer-events: none;
-  background-color: #000;
-}
+    .card img {
+      width: 110px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 0.75rem;
+      pointer-events: none;
+      background-color: #000;
+      flex-shrink: 0;
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      box-shadow: 0 4px 8px rgba(255, 255, 255, 0.15);
+    }
 
-    .card img::selection {
-      background: none;
+    .card:hover img {
+      transform: scale(1.05);
     }
 
     .card h3 {
       font-size: 1.2rem;
-      margin-bottom: 0.8rem;
+      margin-bottom: 0;
+      text-align: left;
+      flex-grow: 1;
     }
 
     .card button {
-      padding: 0.8rem;
-      width: 100%;
-      font-size: 1rem;
-      font-weight: bold;
-      background: linear-gradient(to right, #00d2fc, #00d2fc);
-      color: black;
-      border: none;
-      border-radius: 0.5rem;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
-
-    .card button:hover {
-      background: linear-gradient(to right, #00d2fc, #00d2fc);
+      display: none;
     }
 
     .footer {
@@ -166,16 +154,6 @@
       animation: pulse 1.5s infinite ease-in-out;
     }
 
-.card img {
-  width: 100%;
-  height: 160px;
-  object-fit: cover;
-  border-radius: 0.5rem;
-  margin-bottom: 1rem;
-  pointer-events: none;
-  background-color: #000;
-}
-
     .skeleton .title {
       height: 20px;
       width: 80%;
@@ -190,27 +168,30 @@
       background: rgba(255,255,255,0.1);
       border-radius: 0.5rem;
     }
+
     .floating-contact {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background: linear-gradient(45deg, #00d2fc, #007bff);
-  color: #fff;
-  padding: 0.75rem 1.2rem;
-  font-weight: bold;
-  font-size: 1rem;
-  border-radius: 50px;
-  text-decoration: none;
-  box-shadow: 0 4px 12px rgba(0, 210, 252, 0.5);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  z-index: 999;
-}
-.floating-contact:hover {
-  transform: scale(1.1);
-  box-shadow: 0 6px 16px rgba(0, 210, 252, 0.8);
-  background: linear-gradient(45deg, #007bff, #00d2fc);
-}
-   @keyframes pulse {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: linear-gradient(45deg, #00d2fc, #007bff);
+      color: #fff;
+      padding: 0.75rem 1.2rem;
+      font-weight: bold;
+      font-size: 1rem;
+      border-radius: 50px;
+      text-decoration: none;
+      box-shadow: 0 4px 12px rgba(0, 210, 252, 0.5);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      z-index: 999;
+    }
+
+    .floating-contact:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 16px rgba(0, 210, 252, 0.8);
+      background: linear-gradient(45deg, #007bff, #00d2fc);
+    }
+
+    @keyframes pulse {
       0% { opacity: 1; }
       50% { opacity: 0.5; }
       100% { opacity: 1; }
@@ -220,7 +201,6 @@
 <body>
   <canvas id="particles-bg"></canvas>
   <a href="mailto:contacttodelete@gmail.com" class="floating-contact">✉️ Contact</a>
-
 
 <!-- All Videos Section -->
 <div class="video-section">
@@ -303,6 +283,17 @@
     document.getElementById('postGrid').innerHTML = '';
   }
 
+  function getCardRedirectURL(url, title) {
+    const encodedUrl = encodeURIComponent(url);
+    const encodedTitle = encodeURIComponent(title);
+    const verified = getCookie('verified_access');
+    if (verified === 'true') {
+      return `stream.html?url=${encodedUrl}&title=${encodedTitle}`;
+    } else {
+      return `verify.html?url=${encodedUrl}&title=${encodedTitle}`;
+    }
+  }
+
   function renderPosts(page) {
     const grid = document.getElementById('postGrid');
     grid.innerHTML = '';
@@ -311,25 +302,17 @@
     const pagePosts = allPosts.slice(start, end);
 
     pagePosts.forEach(post => {
-      const card = document.createElement('div');
+      const card = document.createElement('a');
       card.className = 'card';
       card.setAttribute('data-post-id', post.id);
+      card.href = getCardRedirectURL(post.watchUrl, post.title);
+      card.target = '_blank';
       card.innerHTML = `
         <img src="${post.imageUrl}" alt="${post.title}" oncontextmenu="return false;" draggable="false" loading="lazy" decoding="async"/>
         <h3>${post.title}</h3>
-        <button onclick="handleWatchClick('${encodeURIComponent(post.watchUrl)}', '${encodeURIComponent(post.title)}')">Watch</button>
       `;
       grid.appendChild(card);
     });
-  }
-
-  function handleWatchClick(encodedUrl, encodedTitle) {
-    const verified = getCookie('verified_access');
-    if (verified === 'true') {
-      window.open(`stream.html?url=${encodedUrl}&title=${encodedTitle}`, '_blank');
-    } else {
-      window.location.href = `verify.html?url=${encodedUrl}&title=${encodedTitle}`;
-    }
   }
 
   function renderPagination() {
@@ -404,7 +387,6 @@
 
   initParticles();
   animateParticles();
-  
 </script>
 </body>
 </html>
