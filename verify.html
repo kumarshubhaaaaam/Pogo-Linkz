@@ -1,22 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Verify Task</title>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+  <meta name="theme-color" content="#1c1c1c">
+  <title>Pogo Linkz</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    body {
+    * {
       margin: 0;
-      font-family: 'Outfit', sans-serif;
-      background: #000;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background-color: #0a0a0a;
       color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      overflow-x: hidden;
       min-height: 100vh;
-      position: relative;
-      overflow: hidden;
     }
 
     #particles-bg {
@@ -29,172 +31,362 @@
       pointer-events: none;
     }
 
-    .card {
-      background: linear-gradient(145deg, #1e1e1e, #111);
-      border-radius: 20px;
-      box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
-      padding: 20px;
-      max-width: 400px;
-      width: 90%;
+    .video-section {
       text-align: center;
-      z-index: 1;
+      margin-top: 2rem;
     }
-    h2 {
-      font-size: 1.5em;
+
+    .section-heading {
+      text-align: center;
+      font-size: 2.5rem;
+      color: white;
+      font-weight: bold;
+      position: relative;
+      display: inline-block;
+      margin: 2rem auto 1rem;
     }
-    iframe {
-      width: 100%;
-      border-radius: 12px;
-      margin: 10px 0;
+
+    .section-heading::after {
+      content: "";
+      display: block;
+      height: 5px;
+      width: 60%;
+      margin: 0.5rem auto 0;
+      background-color: #00d2fc;
+      border-radius: 10px;
     }
-    .btn {
-      padding: 15px;
-      margin: 10px 0;
-      width: 100%;
-      border: none;
-      border-radius: 50px;
-      font-size: 1em;
-      font-weight: 600;
-      cursor: pointer;
+
+    .grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+      padding: 0 1rem;
+    }
+
+    .card {
+      max-width: 550px;
+      flex: 1 1 500px;
+      background-color: #1c1c1c;
+      padding: 0.8rem;
+      border-radius: 0.75rem;
+      border: 2px solid transparent;
+      opacity: 1;
+      transform: scale(1);
+      pointer-events: auto;
+      user-select: none;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-direction: row;
+      text-decoration: none;
       color: white;
     }
-    .verify-btn {
-      background: linear-gradient(to right, #ff6a00, #ff9472);
+
+    .card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px #00d2fc;
+      border: 2px solid #00d2fc;
     }
-    .how-btn {
-      background: linear-gradient(to right, #6a11cb, #2575fc);
+
+    .card img {
+      width: 110px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 0.75rem;
+      pointer-events: none;
+      background-color: #000;
+      flex-shrink: 0;
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      box-shadow: 0 4px 8px rgba(255, 255, 255, 0.15);
     }
-    .notice-box {
-      background: rgba(255,255,255,0.05);
-      border-radius: 12px;
-      padding: 15px;
-      margin-top: 15px;
-      font-size: 0.95em;
+
+    .card:hover img {
+      transform: scale(1.05);
     }
-    .highlight {
+
+    .card h3 {
+      font-size: 1.2rem;
+      margin-bottom: 0;
+      text-align: left;
+      flex-grow: 1;
+    }
+
+    .card button {
+      display: none;
+    }
+
+    .footer {
+      text-align: center;
+      color: #aaa;
+      margin: 4rem 1rem 2rem;
+      font-size: 0.9rem;
+    }
+
+    .pagination {
+      text-align: center;
+      margin: 2rem auto;
+    }
+
+    .pagination button {
+      background: #333;
+      color: white;
+      padding: 0.5rem 1rem;
+      border: 1px solid #555;
+      margin: 0 0.2rem;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    .pagination button.active {
+      background: #00d2fc;
+      color: black;
       font-weight: bold;
+    }
+
+    .skeleton {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border-radius: 0.75rem;
+      padding: 1rem;
+      text-align: center;
+      animation: pulse 1.5s infinite ease-in-out;
+    }
+
+    .skeleton .title {
+      height: 20px;
+      width: 80%;
+      background: rgba(255,255,255,0.1);
+      margin: 0 auto 1rem;
+      border-radius: 0.4rem;
+    }
+
+    .skeleton .button {
+      height: 40px;
+      width: 100%;
+      background: rgba(255,255,255,0.1);
+      border-radius: 0.5rem;
+    }
+
+    .floating-contact {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: linear-gradient(45deg, #00d2fc, #007bff);
+      color: #fff;
+      padding: 0.75rem 1.2rem;
+      font-weight: bold;
+      font-size: 1rem;
+      border-radius: 50px;
+      text-decoration: none;
+      box-shadow: 0 4px 12px rgba(0, 210, 252, 0.5);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      z-index: 999;
+    }
+
+    .floating-contact:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 16px rgba(0, 210, 252, 0.8);
+      background: linear-gradient(45deg, #007bff, #00d2fc);
+    }
+
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.5; }
+      100% { opacity: 1; }
     }
   </style>
 </head>
 <body>
   <canvas id="particles-bg"></canvas>
+  <a href="mailto:contacttodelete@gmail.com" class="floating-contact">✉️ Contact</a>
 
-  <div class="card">
-    <h2>⚡ Must Watch Tutorial ⚡</h2>
-    <iframe height="215" src="https://savefiles.com/e/48e33u9mrr5g" frameborder="0" allowfullscreen></iframe>
+<!-- All Videos Section -->
+<div class="video-section">
+  <h2 class="section-heading">All Videos</h2><br><br>
+</div>
+<section class="grid" id="postGrid"></section>
+<div class="pagination" id="pagination"></div>
 
-    <h3>Task Verification</h3>
-    <p>Please verify your task by clicking the button below to continue with the process.</p>
+<!-- Disclaimer Footer -->
+<footer style="margin: 3rem auto; max-width: 90%; background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 1rem; padding: 2rem; text-align: center; color: #e0e0e0; font-size: 1rem; box-shadow: 0 0 20px rgba(0,210,252,0.2);">
+  <p style="margin: 0;">
+    ⚠️ <strong>Disclaimer:</strong><br>
+    All videos featured on this site are sourced from external platforms 🌐. We do not host or own any of the content. If you believe your rights have been infringed, or wish to request removal, please contact us 📩 at<br>
+    <a href="mailto:contacttodelete@gmail.com" style="color: #00d2fc; text-decoration: underline; font-weight: bold;">contacttodelete@gmail.com</a>
+  </p>
+</footer>
 
-    <div class="notice-box">
-      <div class="highlight">Notice:</div>
-      Generate key to view all contents of this site for next 24 hours.
-    </div>
+<script>
+  const sheetID = '17FPIRJoA4U4v8YSzGqDL5fxVH-Hc1oGT3jP3-uMnpOE';
+  const sheetName = 'Sheet1';
+  const query = encodeURIComponent('SELECT A, B, C');
+  const url = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?sheet=${sheetName}&tq=${query}`;
+  const postsPerPage = 10;
+  let allPosts = [];
 
-    <button class="btn verify-btn" onclick="generateAdLink()">Click Here To Verify Task</button>
-    <button class="btn how-btn" onclick="alert('Step-by-step guide will go here...')">How To Open Link?</button>
-  </div>
+  function getCookie(name) {
+    const v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+    return v ? v[2] : null;
+  }
 
-  <script>
-    const params = new URLSearchParams(window.location.search);
-    const url = params.get('url');
-    const title = params.get('title');
+  const skeletonKey = 'skeletonLastShown';
+  const now = Date.now();
+  const lastShown = localStorage.getItem(skeletonKey);
+  const showSkeleton = !lastShown || now - parseInt(lastShown) > 86400000;
 
-    const accessKey = `verified_until`;
+  if (showSkeleton) {
+    showSkeletons();
+    localStorage.setItem(skeletonKey, now.toString());
+  }
 
-    const verifiedUntil = localStorage.getItem(accessKey);
-    if (verifiedUntil && Date.now() < Number(verifiedUntil)) {
-      window.location.href = `https://pogolinkz.netlify.app/access-granted.html?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title || "")}`;
+  fetch(url)
+    .then(res => res.text())
+    .then(rep => {
+      const json = JSON.parse(rep.substring(47).slice(0, -2));
+      const data = json.table.rows;
+      allPosts = data.map((row, index) => ({
+        id: `post-${index}`,
+        title: row.c[0]?.v || 'Untitled',
+        imageUrl: row.c[1]?.v || '',
+        watchUrl: row.c[2]?.v || '#'
+      }));
+      if (showSkeleton) {
+        setTimeout(() => {
+          removeSkeletons();
+          renderPagination();
+          renderPosts(1);
+        }, 3000);
+      } else {
+        removeSkeletons();
+        renderPagination();
+        renderPosts(1);
+      }
+    });
+
+  function showSkeletons() {
+    const grid = document.getElementById('postGrid');
+    for (let i = 0; i < postsPerPage; i++) {
+      const skeleton = document.createElement('div');
+      skeleton.className = 'skeleton';
+      skeleton.innerHTML = `
+        <div class="img"></div>
+        <div class="title"></div>
+        <div class="button"></div>
+      `;
+      grid.appendChild(skeleton);
     }
+  }
 
-    async function generateAdLink() {
-      if (!url) {
-        alert("Missing target URL.");
-        return;
-      }
+  function removeSkeletons() {
+    document.getElementById('postGrid').innerHTML = '';
+  }
 
-      const finalRedirect = `https://pogolinkz.netlify.app/access-granted.html?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title || "")}`;
-      const apiToken = 'b253865141e0363f5899f0a69e74772db28f0558';
-      const shortUrlApi = `https://linkshortify.com/api?api=${apiToken}&url=${encodeURIComponent(finalRedirect)}`;
-
-      const btn = document.querySelector('.verify-btn');
-      btn.disabled = true;
-      btn.textContent = "Generating...";
-
-      try {
-        const res = await fetch(shortUrlApi);
-        const result = await res.json();
-
-        if (result.status === 'error') {
-          alert(result.message);
-          btn.disabled = false;
-          btn.textContent = "Click Here To Verify Task";
-        } else {
-          window.location.href = result.shortenedUrl;
-        }
-      } catch (error) {
-        console.error('LinkShortify Error:', error);
-        alert('❌ Failed to generate ad link. Please try using Chrome or disable adblock in this browser.');
-        btn.disabled = false;
-        btn.textContent = "Click Here To Verify Task";
-      }
+  function getCardRedirectURL(url, title) {
+    const encodedUrl = encodeURIComponent(url);
+    const encodedTitle = encodeURIComponent(title);
+    const verified = getCookie('verified_access');
+    if (verified === 'true') {
+      return `stream.html?url=${encodedUrl}&title=${encodedTitle}`;
+    } else {
+      return `verify.html?url=${encodedUrl}&title=${encodedTitle}`;
     }
+  }
 
-    // Particle background script
-    const canvas = document.getElementById('particles-bg');
-    const ctx = canvas.getContext('2d');
-    let particles = [];
+  function renderPosts(page) {
+    const grid = document.getElementById('postGrid');
+    grid.innerHTML = '';
+    const start = (page - 1) * postsPerPage;
+    const end = start + postsPerPage;
+    const pagePosts = allPosts.slice(start, end);
 
-    function resize() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
+    pagePosts.forEach(post => {
+      const card = document.createElement('a');
+      card.className = 'card';
+      card.setAttribute('data-post-id', post.id);
+      card.href = getCardRedirectURL(post.watchUrl, post.title);
+      card.target = '_blank';
+      card.innerHTML = `
+        <img src="${post.imageUrl}" alt="${post.title}" oncontextmenu="return false;" draggable="false" loading="lazy" decoding="async"/>
+        <h3>${post.title}</h3>
+      `;
+      grid.appendChild(card);
+    });
+  }
 
-    window.addEventListener('resize', resize);
-    resize();
+  function renderPagination() {
+    const pagination = document.getElementById('pagination');
+    const totalPages = Math.ceil(allPosts.length / postsPerPage);
+    pagination.innerHTML = '';
 
-    class Particle {
-      constructor() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
-        this.radius = Math.random() * 2;
-        this.speedX = (Math.random() - 0.5) * 0.7;
-        this.speedY = (Math.random() - 0.5) * 0.7;
-      }
-
-      draw() {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        ctx.fillStyle = 'white';
-        ctx.fill();
-      }
-
-      update() {
-        this.x += this.speedX;
-        this.y += this.speedY;
-        if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
-        if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
-      }
-    }
-
-    function initParticles() {
-      particles = [];
-      for (let i = 0; i < 150; i++) {
-        particles.push(new Particle());
-      }
-    }
-
-    function animateParticles() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particles.forEach(p => {
-        p.update();
-        p.draw();
+    for (let i = 1; i <= totalPages; i++) {
+      const btn = document.createElement('button');
+      btn.textContent = i;
+      btn.addEventListener('click', () => {
+        renderPosts(i);
+        document.querySelectorAll('.pagination button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
       });
-      requestAnimationFrame(animateParticles);
+      if (i === 1) btn.classList.add('active');
+      pagination.appendChild(btn);
+    }
+  }
+
+  const canvas = document.getElementById('particles-bg');
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+
+  window.addEventListener('resize', resize);
+  resize();
+
+  class Particle {
+    constructor() {
+      this.x = Math.random() * canvas.width;
+      this.y = Math.random() * canvas.height;
+      this.radius = Math.random() * 2;
+      this.speedX = (Math.random() - 0.5) * 0.7;
+      this.speedY = (Math.random() - 0.5) * 0.7;
     }
 
-    initParticles();
-    animateParticles();
-  </script>
+    draw() {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+      ctx.fillStyle = 'white';
+      ctx.fill();
+    }
+
+    update() {
+      this.x += this.speedX;
+      this.y += this.speedY;
+      if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+      if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+    }
+  }
+
+  function initParticles() {
+    particles = [];
+    for (let i = 0; i < 150; i++) {
+      particles.push(new Particle());
+    }
+  }
+
+  function animateParticles() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => {
+      p.update();
+      p.draw();
+    });
+    requestAnimationFrame(animateParticles);
+  }
+
+  initParticles();
+  animateParticles();
+</script>
 </body>
 </html>
