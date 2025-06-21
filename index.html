@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta name="theme-color" content="#1c1c1c">
@@ -65,23 +65,14 @@
     }
 
     .card {
-      max-width: 550px;
-      flex: 1 1 500px;
       background-color: #1c1c1c;
-      padding: 0.8rem;
+      padding: 1rem;
       border-radius: 0.75rem;
+      text-align: center;
       border: 2px solid transparent;
-      opacity: 1;
-      transform: scale(1);
-      pointer-events: auto;
-      user-select: none;
+      max-width: 320px;
+      flex: 1 1 300px;
       transition: transform 0.3s ease, box-shadow 0.3s ease, border 0.3s ease;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      flex-direction: row;
-      text-decoration: none;
-      color: white;
     }
 
     .card:hover {
@@ -91,37 +82,35 @@
     }
 
     .card img {
-      width: 110px;
-      height: 80px;
+      width: 100%;
+      height: 160px;
       object-fit: cover;
-      border-radius: 0.75rem;
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
       pointer-events: none;
       background-color: #000;
-      flex-shrink: 0;
-      transition: transform 0.4s ease, box-shadow 0.4s ease;
-      box-shadow: 0 4px 8px rgba(255, 255, 255, 0.15);
-    }
-
-    .card:hover img {
-      transform: scale(1.05);
     }
 
     .card h3 {
       font-size: 1.2rem;
-      margin-bottom: 0;
-      text-align: left;
-      flex-grow: 1;
+      margin-bottom: 0.8rem;
     }
 
     .card button {
-      display: none;
+      padding: 0.8rem;
+      width: 100%;
+      font-size: 1rem;
+      font-weight: bold;
+      background: linear-gradient(to right, #00d2fc, #00d2fc);
+      color: black;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: background 0.3s ease;
     }
 
-    .footer {
-      text-align: center;
-      color: #aaa;
-      margin: 4rem 1rem 2rem;
-      font-size: 0.9rem;
+    .card button:hover {
+      background: linear-gradient(to right, #00d2fc, #00d2fc);
     }
 
     .pagination {
@@ -152,6 +141,16 @@
       padding: 1rem;
       text-align: center;
       animation: pulse 1.5s infinite ease-in-out;
+      max-width: 320px;
+      flex: 1 1 300px;
+    }
+
+    .skeleton .img {
+      width: 100%;
+      height: 160px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
     }
 
     .skeleton .title {
@@ -163,7 +162,7 @@
     }
 
     .skeleton .button {
-      height: 40px;
+      height: 45px;
       width: 100%;
       background: rgba(255,255,255,0.1);
       border-radius: 0.5rem;
@@ -196,197 +195,208 @@
       50% { opacity: 0.5; }
       100% { opacity: 1; }
     }
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
   </style>
 </head>
 <body>
   <canvas id="particles-bg"></canvas>
-  <a href="mailto:contacttodelete@gmail.com" class="floating-contact">✉️ Contact</a>
+  <a href="mailto:contacttodelete@gmail.com" class="floating-contact">✉️ Contact Us</a>
 
-<!-- All Videos Section -->
-<div class="video-section">
-  <h2 class="section-heading">All Videos</h2><br><br>
-</div>
-<section class="grid" id="postGrid"></section>
-<div class="pagination" id="pagination"></div>
+  <div class="video-section">
+    <h2 class="section-heading"> All Videos</h2><br><br>
+  </div>
 
-<!-- Disclaimer Footer -->
-<footer style="margin: 3rem auto; max-width: 90%; background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 1rem; padding: 2rem; text-align: center; color: #e0e0e0; font-size: 1rem; box-shadow: 0 0 20px rgba(0,210,252,0.2);">
-  <p style="margin: 0;">
-    ⚠️ <strong>Disclaimer:</strong><br>
-    All videos featured on this site are sourced from external platforms 🌐. We do not host or own any of the content. If you believe your rights have been infringed, or wish to request removal, please contact us 📩 at<br>
-    <a href="mailto:contacttodelete@gmail.com" style="color: #00d2fc; text-decoration: underline; font-weight: bold;">contacttodelete@gmail.com</a>
-  </p>
-</footer>
+  <section class="grid" id="postGrid"></section>
+  <div class="pagination" id="pagination"></div>
 
-<script>
-  const sheetID = '17FPIRJoA4U4v8YSzGqDL5fxVH-Hc1oGT3jP3-uMnpOE';
-  const sheetName = 'Sheet1';
-  const query = encodeURIComponent('SELECT A, B, C');
-  const url = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?sheet=${sheetName}&tq=${query}`;
-  const postsPerPage = 10;
-  let allPosts = [];
+  <footer style="margin: 3rem auto; max-width: 90%; background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 1rem; padding: 2rem; text-align: center; color: #e0e0e0; font-size: 1rem; box-shadow: 0 0 20px rgba(0,210,252,0.2);">
+    <p style="margin: 0;">
+      ⚠️ <strong>Disclaimer:</strong><br>
+      All videos featured on this site are sourced from external platforms 🌐. We do not host or own any of the content. If you believe your rights have been infringed, or wish to request removal, please contact us 📩 at<br>
+      <a href="mailto:contacttodelete@gmail.com" style="color: #00d2fc; text-decoration: underline; font-weight: bold;">contacttodelete@gmail.com</a>
+    </p>
+  </footer>
 
-  function getCookie(name) {
-    const v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
-    return v ? v[2] : null;
-  }
+  <script>
+    const sheetID = '17FPIRJoA4U4v8YSzGqDL5fxVH-Hc1oGT3jP3-uMnpOE';
+    const sheetName = 'Sheet1';
+    const query = encodeURIComponent('SELECT A, B, C');
+    const url = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?sheet=${sheetName}&tq=${query}`;
+    const postsPerPage = 10;
+    let allPosts = [];
 
-  const skeletonKey = 'skeletonLastShown';
-  const now = Date.now();
-  const lastShown = localStorage.getItem(skeletonKey);
-  const showSkeleton = !lastShown || now - parseInt(lastShown) > 86400000;
+    const emojiList = ['🔥', '🎬', '🌟', '🚀', '✨', '🎥', '💥', '🎞️', '🎉', '📽️'];
 
-  if (showSkeleton) {
-    showSkeletons();
-    localStorage.setItem(skeletonKey, now.toString());
-  }
+    function getCookie(name) {
+      const v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+      return v ? v[2] : null;
+    }
 
-  fetch(url)
-    .then(res => res.text())
-    .then(rep => {
-      const json = JSON.parse(rep.substring(47).slice(0, -2));
-      const data = json.table.rows;
-      allPosts = data.map((row, index) => ({
-        id: `post-${index}`,
-        title: row.c[0]?.v || 'Untitled',
-        imageUrl: row.c[1]?.v || '',
-        watchUrl: row.c[2]?.v || '#'
-      }));
-      if (showSkeleton) {
-        setTimeout(() => {
+    const skeletonKey = 'skeletonLastShown';
+    const now = Date.now();
+    const lastShown = localStorage.getItem(skeletonKey);
+    const showSkeleton = !lastShown || now - parseInt(lastShown) > 86400000;
+
+    if (showSkeleton) {
+      showSkeletons();
+      localStorage.setItem(skeletonKey, now.toString());
+    }
+
+    fetch(url)
+      .then(res => res.text())
+      .then(rep => {
+        const json = JSON.parse(rep.substring(47).slice(0, -2));
+        const data = json.table.rows;
+        allPosts = data.map((row, index) => ({
+          id: `post-${index}`,
+          title: row.c[0]?.v || 'Untitled',
+          imageUrl: row.c[1]?.v || '',
+          watchUrl: row.c[2]?.v || '#'
+        }));
+        if (showSkeleton) {
+          setTimeout(() => {
+            removeSkeletons();
+            renderPagination();
+            renderPosts(1);
+          }, 3000);
+        } else {
           removeSkeletons();
           renderPagination();
           renderPosts(1);
-        }, 3000);
-      } else {
-        removeSkeletons();
-        renderPagination();
-        renderPosts(1);
-      }
-    });
-
-  function showSkeletons() {
-    const grid = document.getElementById('postGrid');
-    for (let i = 0; i < postsPerPage; i++) {
-      const skeleton = document.createElement('div');
-      skeleton.className = 'skeleton';
-      skeleton.innerHTML = `
-        <div class="img"></div>
-        <div class="title"></div>
-        <div class="button"></div>
-      `;
-      grid.appendChild(skeleton);
-    }
-  }
-
-  function removeSkeletons() {
-    document.getElementById('postGrid').innerHTML = '';
-  }
-
-  function getCardRedirectURL(url, title) {
-    const encodedUrl = encodeURIComponent(url);
-    const encodedTitle = encodeURIComponent(title);
-    const verified = getCookie('verified_access');
-    if (verified === 'true') {
-      return `stream.html?url=${encodedUrl}&title=${encodedTitle}`;
-    } else {
-      return `verify.html?url=${encodedUrl}&title=${encodedTitle}`;
-    }
-  }
-
-  function renderPosts(page) {
-    const grid = document.getElementById('postGrid');
-    grid.innerHTML = '';
-    const start = (page - 1) * postsPerPage;
-    const end = start + postsPerPage;
-    const pagePosts = allPosts.slice(start, end);
-
-    pagePosts.forEach(post => {
-      const card = document.createElement('a');
-      card.className = 'card';
-      card.setAttribute('data-post-id', post.id);
-      card.href = getCardRedirectURL(post.watchUrl, post.title);
-      card.target = '_blank';
-      card.innerHTML = `
-        <img src="${post.imageUrl}" alt="${post.title}" oncontextmenu="return false;" draggable="false" loading="lazy" decoding="async"/>
-        <h3>${post.title}</h3>
-      `;
-      grid.appendChild(card);
-    });
-  }
-
-  function renderPagination() {
-    const pagination = document.getElementById('pagination');
-    const totalPages = Math.ceil(allPosts.length / postsPerPage);
-    pagination.innerHTML = '';
-
-    for (let i = 1; i <= totalPages; i++) {
-      const btn = document.createElement('button');
-      btn.textContent = i;
-      btn.addEventListener('click', () => {
-        renderPosts(i);
-        document.querySelectorAll('.pagination button').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+        }
       });
-      if (i === 1) btn.classList.add('active');
-      pagination.appendChild(btn);
-    }
-  }
 
-  const canvas = document.getElementById('particles-bg');
-  const ctx = canvas.getContext('2d');
-  let particles = [];
-
-  function resize() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-  }
-
-  window.addEventListener('resize', resize);
-  resize();
-
-  class Particle {
-    constructor() {
-      this.x = Math.random() * canvas.width;
-      this.y = Math.random() * canvas.height;
-      this.radius = Math.random() * 2;
-      this.speedX = (Math.random() - 0.5) * 0.7;
-      this.speedY = (Math.random() - 0.5) * 0.7;
+    function showSkeletons() {
+      const grid = document.getElementById('postGrid');
+      for (let i = 0; i < postsPerPage; i++) {
+        const skeleton = document.createElement('div');
+        skeleton.className = 'skeleton';
+        skeleton.innerHTML = `
+          <div class="img"></div>
+          <div class="title"></div>
+          <div class="button"></div>
+        `;
+        grid.appendChild(skeleton);
+      }
     }
 
-    draw() {
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-      ctx.fillStyle = 'white';
-      ctx.fill();
+    function removeSkeletons() {
+      document.getElementById('postGrid').innerHTML = '';
     }
 
-    update() {
-      this.x += this.speedX;
-      this.y += this.speedY;
-      if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
-      if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+    function renderPosts(page) {
+      const grid = document.getElementById('postGrid');
+      grid.innerHTML = '';
+      const start = (page - 1) * postsPerPage;
+      const end = start + postsPerPage;
+      const pagePosts = allPosts.slice(start, end);
+
+      pagePosts.forEach((post, index) => {
+        const emoji = emojiList[index % emojiList.length];
+        const card = document.createElement('div');
+        card.className = 'card fade-in';
+        card.style.animationDelay = `${index * 100}ms`;
+        card.setAttribute('data-post-id', post.id);
+        card.innerHTML = `
+          <img src="${post.imageUrl}" alt="${post.title}" oncontextmenu="return false;" draggable="false" loading="lazy" decoding="async"/>
+          <h3>${emoji} ${post.title}</h3>
+          <button onclick="handleWatchClick('${encodeURIComponent(post.watchUrl)}', '${encodeURIComponent(post.title)}')">▶️ Watch</button>
+        `;
+        grid.appendChild(card);
+      });
     }
-  }
 
-  function initParticles() {
-    particles = [];
-    for (let i = 0; i < 150; i++) {
-      particles.push(new Particle());
+    function handleWatchClick(encodedUrl, encodedTitle) {
+      const verified = getCookie('verified_access');
+      if (verified === 'true') {
+        window.open(`stream.html?url=${encodedUrl}&title=${encodedTitle}`, '_blank');
+      } else {
+        window.location.href = `verify.html?url=${encodedUrl}&title=${encodedTitle}`;
+      }
     }
-  }
 
-  function animateParticles() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    particles.forEach(p => {
-      p.update();
-      p.draw();
-    });
-    requestAnimationFrame(animateParticles);
-  }
+    function renderPagination() {
+      const pagination = document.getElementById('pagination');
+      const totalPages = Math.ceil(allPosts.length / postsPerPage);
+      pagination.innerHTML = '';
 
-  initParticles();
-  animateParticles();
-</script>
+      for (let i = 1; i <= totalPages; i++) {
+        const btn = document.createElement('button');
+        btn.textContent = `📄 ${i}`;
+        btn.addEventListener('click', () => {
+          renderPosts(i);
+          document.querySelectorAll('.pagination button').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+        });
+        if (i === 1) btn.classList.add('active');
+        pagination.appendChild(btn);
+      }
+    }
+
+    const canvas = document.getElementById('particles-bg');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    window.addEventListener('resize', resize);
+    resize();
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.radius = Math.random() * 2;
+        this.speedX = (Math.random() - 0.5) * 0.7;
+        this.speedY = (Math.random() - 0.5) * 0.7;
+      }
+
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = 'white';
+        ctx.fill();
+      }
+
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+      }
+    }
+
+    function initParticles() {
+      particles = [];
+      for (let i = 0; i < 150; i++) {
+        particles.push(new Particle());
+      }
+    }
+
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => {
+        p.update();
+        p.draw();
+      });
+      requestAnimationFrame(animateParticles);
+    }
+
+    initParticles();
+    animateParticles();
+  </script>
 </body>
 </html>
