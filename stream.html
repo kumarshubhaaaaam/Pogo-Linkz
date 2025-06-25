@@ -31,7 +31,7 @@
       pointer-events: none;
     }
 
-  .card {
+    .card {
       background-color: #1c1c1c;
       padding: 1rem;
       border-radius: 0.75rem;
@@ -183,10 +183,7 @@
 </head>
 <body>
 <canvas id="particles-bg"></canvas>
-<br>
-<br>
-<br>
-<br>
+<br><br><br><br>
 <div class="button-wrapper">
   <a href="index.html" class="back-home-btn">Back</a>
 </div>
@@ -211,19 +208,19 @@
   const title = urlParams.get('title') || "Streaming...";
 
   function isVerified() {
-  const verifiedCookie = document.cookie.includes("verified_access=true");
-  const verifiedUntil = parseInt(localStorage.getItem('verifiedUntil') || '0', 10);
-  return verifiedCookie && verifiedUntil > Date.now();
-}
+    const verifiedCookie = document.cookie.includes("verified_access=true");
+    const verifiedUntil = parseInt(localStorage.getItem('verifiedUntil') || '0', 10);
+    return verifiedCookie && verifiedUntil > Date.now();
+  }
 
-const streamCard = document.getElementById("streamCard");
-const verificationLock = document.getElementById("verificationLock");
+  const streamCard = document.getElementById("streamCard");
+  const verificationLock = document.getElementById("verificationLock");
 
-if (isVerified()) {
-  showStream();
-} else {
-  verificationLock.style.display = "block";
-}
+  if (isVerified()) {
+    showStream();
+  } else {
+    verificationLock.style.display = "block";
+  }
 
   function showStream() {
     verificationLock.style.display = "none";
@@ -241,6 +238,12 @@ if (isVerified()) {
     iframe.onload = () => {
       document.getElementById('loader').style.display = 'none';
       document.getElementById('videoContainer').style.display = 'block';
+    };
+
+    // ✅ NEW: Fallback for blocked embeds
+    iframe.onerror = () => {
+      alert("This video cannot be embedded. Opening in a new tab...");
+      window.open(streamUrl, '_blank');
     };
   }
 
@@ -261,7 +264,7 @@ if (isVerified()) {
       .catch(() => alert("Failed to generate ad link."));
   }
 
-  // Replaced particle animation with white particles (verify-style)
+  // Particle animation
   const canvas = document.getElementById('particles-bg');
   const ctx = canvas.getContext('2d');
   let particles = [];
