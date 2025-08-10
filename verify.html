@@ -95,17 +95,20 @@
     <button class="btn how-btn" onclick="alert('Step-by-step guide will go here...')">How To Open Link?</button>
   </div>
 
-  <script>
+ <script>
     const params = new URLSearchParams(window.location.search);
     const url = params.get('url');
     const title = params.get('title');
 
-    const accessKey = `verified_until`;
+    // Use same key as access-granted.html — camelCase 'verifiedUntil'
+    const accessKey = 'verifiedUntil';
 
-    // ✅ Updated: Only localStorage check for verification
+    // If already verified (localStorage) — go to access-granted on same origin
     const verifiedUntil = localStorage.getItem(accessKey);
     if (verifiedUntil && Date.now() < Number(verifiedUntil)) {
-      window.location.href = `https://pogolinkz.netlify.app/access-granted.html?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title || "")}`;
+      // ensure redirect uses the same origin so localStorage is shared
+      const base = (location.origin && location.origin !== 'null') ? location.origin : '';
+      window.location.href = `${base}/access-granted.html?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title || "")}`;
     }
 
     async function generateAdLink() {
@@ -114,7 +117,10 @@
         return;
       }
 
-      const finalRedirect = `https://pogolinkz.netlify.app/access-granted.html?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title || "")}`;
+      // Ensure final redirect uses same origin so access-granted sets localStorage on same origin
+      const base = (location.origin && location.origin !== 'null') ? location.origin : '';
+      const finalRedirect = `${base}/access-granted.html?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title || "")}`;
+
       const apiToken = 'b253865141e0363f5899f0a69e74772db28f0558';
       const shortUrlApi = `https://linkshortify.com/api?api=${apiToken}&url=${encodeURIComponent(finalRedirect)}`;
 
@@ -141,7 +147,7 @@
       }
     }
 
-    // Particle background script
+    // Particle background script (unchanged)
     const canvas = document.getElementById('particles-bg');
     const ctx = canvas.getContext('2d');
     let particles = [];
