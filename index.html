@@ -207,6 +207,31 @@
       }
     }
   </style>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyD0ToOiOy0rxygIiJbulFA1JMqwiGGHBdQ",
+    authDomain: "pogoverification.firebaseapp.com",
+    databaseURL: "https://pogoverification-default-rtdb.firebaseio.com",
+    projectId: "pogoverification",
+    storageBucket: "pogoverification.firebasestorage.app",
+    messagingSenderId: "809965158927",
+    appId: "1:809965158927:web:677ba69861acc49be1d97a"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+
+  async function getUserIdentifier() {
+    const fp = await FingerprintJS.load();
+    const result = await fp.get();
+    const fingerprint = result.visitorId;
+    const ipRes = await fetch("https://api.ipify.org?format=json");
+    const ipData = await ipRes.json();
+    return `${ipData.ip}_${fingerprint}`;
+  }
+</script>
 </head>
 <body>
   <canvas id="particles-bg"></canvas>
@@ -243,6 +268,17 @@
   const query = encodeURIComponent('SELECT A, B, C');
   const url = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?sheet=${sheetName}&tq=${query}`;
   const postsPerPage = 10;
+  getUserIdentifier().then(uid => {
+  db.ref("verifiedUsers/" + uid).once("value", snap => {
+    if (snap.exists()) {
+      const data = snap.val();
+      if (data.verified && data.expiresAt > Date.now()) {
+        document.cookie = "verified_access=true; path=/";
+        localStorage.setItem('verifiedUntil', data.expiresAt);
+      }
+    }
+  });
+});
   let allPosts = [];
   
   const emojiList = ['🔥', '🎬', '🌟', '🚀', '✨', '🎥', '💥', '🎞️', '🎉', '📽️'];
