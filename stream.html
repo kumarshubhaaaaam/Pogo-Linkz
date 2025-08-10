@@ -207,10 +207,10 @@
   const streamUrl = urlParams.get('url');
   const title = urlParams.get('title') || "Streaming...";
 
+  // ✅ Updated: Only localStorage check for verification
   function isVerified() {
-    const verifiedCookie = document.cookie.includes("verified_access=true");
     const verifiedUntil = parseInt(localStorage.getItem('verifiedUntil') || '0', 10);
-    return verifiedCookie && verifiedUntil > Date.now();
+    return verifiedUntil > Date.now();
   }
 
   const streamCard = document.getElementById("streamCard");
@@ -240,7 +240,6 @@
       document.getElementById('videoContainer').style.display = 'block';
     };
 
-    // ✅ NEW: Fallback for blocked embeds
     iframe.onerror = () => {
       alert("This video cannot be embedded. Opening in a new tab...");
       window.open(streamUrl, '_blank');
