@@ -76,6 +76,31 @@
     }
   </style>
 </head>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyD0ToOiOy0rxygIiJbulFA1JMqwiGGHBdQ",
+    authDomain: "pogoverification.firebaseapp.com",
+    databaseURL: "https://pogoverification-default-rtdb.firebaseio.com",
+    projectId: "pogoverification",
+    storageBucket: "pogoverification.firebasestorage.app",
+    messagingSenderId: "809965158927",
+    appId: "1:809965158927:web:677ba69861acc49be1d97a"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+
+  async function getUserIdentifier() {
+    const fp = await FingerprintJS.load();
+    const result = await fp.get();
+    const fingerprint = result.visitorId;
+    const ipRes = await fetch("https://api.ipify.org?format=json");
+    const ipData = await ipRes.json();
+    return `${ipData.ip}_${fingerprint}`;
+  }
+</script>
 <body>
   <canvas id="particles-bg"></canvas>
 
@@ -95,20 +120,17 @@
     <button class="btn how-btn" onclick="alert('Step-by-step guide will go here...')">How To Open Link?</button>
   </div>
 
- <script>
+  <script>
     const params = new URLSearchParams(window.location.search);
     const url = params.get('url');
     const title = params.get('title');
 
-    // Use same key as access-granted.html — camelCase 'verifiedUntil'
-    const accessKey = 'verifiedUntil';
+    const accessKey = `verified_until`;
 
-    // If already verified (localStorage) — go to access-granted on same origin
+    // ✅ Updated: Only localStorage check for verification
     const verifiedUntil = localStorage.getItem(accessKey);
     if (verifiedUntil && Date.now() < Number(verifiedUntil)) {
-      // ensure redirect uses the same origin so localStorage is shared
-      const base = (location.origin && location.origin !== 'null') ? location.origin : '';
-      window.location.href = `${base}/access-granted.html?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title || "")}`;
+      window.location.href = `https://pogolinkz.netlify.app/access-granted.html?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title || "")}`;
     }
 
     async function generateAdLink() {
@@ -117,10 +139,7 @@
         return;
       }
 
-      // Ensure final redirect uses same origin so access-granted sets localStorage on same origin
-      const base = (location.origin && location.origin !== 'null') ? location.origin : '';
-      const finalRedirect = `${base}/access-granted.html?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title || "")}`;
-
+      const finalRedirect = `https://pogolinkz.netlify.app/access-granted.html?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title || "")}`;
       const apiToken = 'b253865141e0363f5899f0a69e74772db28f0558';
       const shortUrlApi = `https://linkshortify.com/api?api=${apiToken}&url=${encodeURIComponent(finalRedirect)}`;
 
@@ -137,6 +156,13 @@
           btn.disabled = false;
           btn.textContent = "Click Here To Verify Task";
         } else {
+          const expiresAt = Date.now() + 24 * 60 * 60 * 1000;
+getUserIdentifier().then(uid => {
+  db.ref("verifiedUsers/" + uid).set({
+    verified: true,
+    expiresAt: expiresAt
+  });
+});
           window.location.href = result.shortenedUrl;
         }
       } catch (error) {
@@ -147,7 +173,7 @@
       }
     }
 
-    // Particle background script (unchanged)
+    // Particle background script
     const canvas = document.getElementById('particles-bg');
     const ctx = canvas.getContext('2d');
     let particles = [];
