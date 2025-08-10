@@ -32,6 +32,31 @@
       }
     }
   </style>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyD0ToOiOy0rxygIiJbulFA1JMqwiGGHBdQ",
+    authDomain: "pogoverification.firebaseapp.com",
+    databaseURL: "https://pogoverification-default-rtdb.firebaseio.com",
+    projectId: "pogoverification",
+    storageBucket: "pogoverification.firebasestorage.app",
+    messagingSenderId: "809965158927",
+    appId: "1:809965158927:web:677ba69861acc49be1d97a"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+
+  async function getUserIdentifier() {
+    const fp = await FingerprintJS.load();
+    const result = await fp.get();
+    const fingerprint = result.visitorId;
+    const ipRes = await fetch("https://api.ipify.org?format=json");
+    const ipData = await ipRes.json();
+    return `${ipData.ip}_${fingerprint}`;
+  }
+</script>
 </head>
 <body>
   <h2>Access Granted</h2>
@@ -39,7 +64,12 @@
 
  <script>
     const expiresAt = Date.now() + (24 * 60 * 60 * 1000);
-
+getUserIdentifier().then(uid => {
+  db.ref("verifiedUsers/" + uid).set({
+    verified: true,
+    expiresAt: expiresAt
+  });
+});
     // ✅ Main verification storage: localStorage
     localStorage.setItem('verifiedUntil', expiresAt);
 
