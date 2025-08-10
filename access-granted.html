@@ -37,11 +37,13 @@
   <h2>Access Granted</h2>
   <p>Redirecting to your stream content...</p>
 
-  <script>
+ <script>
     const expiresAt = Date.now() + (24 * 60 * 60 * 1000);
+
+    // ✅ Main verification storage: localStorage
     localStorage.setItem('verifiedUntil', expiresAt);
 
-    // Set persistent cookie with explicit expiration date
+    // 🍪 Cookie set kar rahe hain sirf optional extra ke liye
     const expireDate = new Date(expiresAt).toUTCString();
     document.cookie = "verified_access=true; expires=" + expireDate + "; path=/";
 
@@ -57,6 +59,6 @@
     setTimeout(() => {
       window.location.href = target;
     }, 2000);
-  </script>
+</script>
 </body>
 </html>
