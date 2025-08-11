@@ -251,7 +251,14 @@
     const currentUrl = encodeURIComponent(window.location.href);
     const shareusApiUrl = `https://api.shareus.io/easy_api?key=pVSmmVpEFtTLjLc2jshXFqOGNzc2&link=${currentUrl}`;
     // Direct redirect to Shareus monetized link
-    window.location.href = shareusApiUrl;
+    fetch(shareusApiUrl)
+  .then(res => res.text())
+  .then(shortLink => {
+    window.location.href = shortLink.trim();
+  })
+  .catch(() => {
+    alert("❌ Failed to generate ad link. Please try again.");
+  });
   }
 
   // Particle animation
