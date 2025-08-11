@@ -22,7 +22,40 @@
     p {
       font-size: 1.1em;
     }
-
+    .popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(20, 20, 20, 0.95);
+      border: 2px solid #00d2fc;
+      border-radius: 10px;
+      padding: 20px;
+      max-width: 400px;
+      width: 90%;
+      box-shadow: 0 0 20px rgba(0,210,252,0.5);
+      z-index: 9999;
+      display: none;
+      animation: fadeIn 0.4s ease-in-out;
+    }
+    .popup p {
+      font-size: 1rem;
+      line-height: 1.4;
+    }
+    .popup button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      border: none;
+      background: #00d2fc;
+      color: #000;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translate(-50%, -60%); }
+      to { opacity: 1; transform: translate(-50%, -50%); }
+    }
     @media (max-width: 600px) {
       h2 {
         font-size: 1.8em;
@@ -32,48 +65,23 @@
       }
     }
   </style>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
-<script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyD0ToOiOy0rxygIiJbulFA1JMqwiGGHBdQ",
-    authDomain: "pogoverification.firebaseapp.com",
-    databaseURL: "https://pogoverification-default-rtdb.firebaseio.com",
-    projectId: "pogoverification",
-    storageBucket: "pogoverification.firebasestorage.app",
-    messagingSenderId: "809965158927",
-    appId: "1:809965158927:web:677ba69861acc49be1d97a"
-  };
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.database();
-
-  async function getUserIdentifier() {
-    const fp = await FingerprintJS.load();
-    const result = await fp.get();
-    const fingerprint = result.visitorId;
-    const ipRes = await fetch("https://api.ipify.org?format=json");
-    const ipData = await ipRes.json();
-    return `${ipData.ip}_${fingerprint}`;
-  }
-</script>
 </head>
 <body>
   <h2>Access Granted</h2>
   <p>Redirecting to your stream content...</p>
 
- <script>
+  <!-- Popup Warning -->
+  <div class="popup" id="warningPopup">
+    <p>⚠️ After clearing browser history or cookies 🍪 you will have to verify again.<br><br>
+    Please avoid clearing browser history or cookies if you want to keep access.</p>
+    <button onclick="closePopup()">OK</button>
+  </div>
+
+  <script>
     const expiresAt = Date.now() + (24 * 60 * 60 * 1000);
-getUserIdentifier().then(uid => {
-  db.ref("verifiedUsers/" + uid).set({
-    verified: true,
-    expiresAt: expiresAt
-  });
-});
-    // ✅ Main verification storage: localStorage
     localStorage.setItem('verifiedUntil', expiresAt);
 
-    // 🍪 Cookie set kar rahe hain sirf optional extra ke liye
+    // Set persistent cookie with explicit expiration date
     const expireDate = new Date(expiresAt).toUTCString();
     document.cookie = "verified_access=true; expires=" + expireDate + "; path=/";
 
@@ -86,9 +94,15 @@ getUserIdentifier().then(uid => {
       target += `&title=${encodeURIComponent(title)}`;
     }
 
-    setTimeout(() => {
-      window.location.href = target;
-    }, 2000);
-</script>
+    // Show popup before redirecting
+    document.getElementById('warningPopup').style.display = 'block';
+
+    function closePopup() {
+      document.getElementById('warningPopup').style.display = 'none';
+      setTimeout(() => {
+        window.location.href = target;
+      }, 500);
+    }
+  </script>
 </body>
 </html>
