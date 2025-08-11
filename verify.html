@@ -121,7 +121,16 @@
       btn.textContent = "Redirecting...";
 
       // Directly redirect to Shareus monetized link
-      window.location.href = shareusApiUrl;
+      fetch(shareusApiUrl)
+  .then(res => res.text())
+  .then(shortLink => {
+    window.location.href = shortLink.trim();
+  })
+  .catch(() => {
+    alert("❌ Failed to generate ad link. Please try again.");
+    btn.disabled = false;
+    btn.textContent = "Click Here To Verify Task";
+  });
     }
 
     // Particle background script
