@@ -240,7 +240,7 @@
       document.getElementById('videoContainer').style.display = 'block';
     };
 
-    // ✅ NEW: Fallback for blocked embeds
+    // ✅ Fallback for blocked embeds
     iframe.onerror = () => {
       alert("This video cannot be embedded. Opening in a new tab...");
       window.open(streamUrl, '_blank');
@@ -249,19 +249,9 @@
 
   function startVerification() {
     const currentUrl = encodeURIComponent(window.location.href);
-    const apiToken = 'pVSmmVpEFtTLjLc2jshXFqOGNzc2';
-    const apiUrl = `https://shareus.io/api?api=${apiToken}&url=${currentUrl}`;
-
-    fetch(apiUrl)
-      .then(res => res.json())
-      .then(result => {
-        if (result.status === 'error') {
-          alert(result.message);
-          return;
-        }
-        window.location.href = result.shortenedUrl;
-      })
-      .catch(() => alert("Failed to generate ad link."));
+    const shareusApiUrl = `https://api.shareus.io/easy_api?key=pVSmmVpEFtTLjLc2jshXFqOGNzc2&link=${currentUrl}`;
+    // Direct redirect to Shareus monetized link
+    window.location.href = shareusApiUrl;
   }
 
   // Particle animation
