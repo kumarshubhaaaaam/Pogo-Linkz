@@ -114,30 +114,14 @@
       }
 
       const finalRedirect = `https://pogolinkz.netlify.app/access-granted.html?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title || "")}`;
-      const apiToken = 'pVSmmVpEFtTLjLc2jshXFqOGNzc2';
-      const shortUrlApi = `https://shareus.io/api?api=${apiToken}&url=${encodeURIComponent(finalRedirect)}`;
+      const shareusApiUrl = `https://api.shareus.io/easy_api?key=pVSmmVpEFtTLjLc2jshXFqOGNzc2&link=${encodeURIComponent(finalRedirect)}`;
 
       const btn = document.querySelector('.verify-btn');
       btn.disabled = true;
-      btn.textContent = "Generating...";
+      btn.textContent = "Redirecting...";
 
-      try {
-        const res = await fetch(shortUrlApi);
-        const result = await res.json();
-
-        if (result.status === 'error') {
-          alert(result.message);
-          btn.disabled = false;
-          btn.textContent = "Click Here To Verify Task";
-        } else {
-          window.location.href = result.shortenedUrl;
-        }
-      } catch (error) {
-        console.error('LinkShortify Error:', error);
-        alert('❌ Failed to generate ad link. Please try using Chrome or disable adblock in this browser.');
-        btn.disabled = false;
-        btn.textContent = "Click Here To Verify Task";
-      }
+      // Directly redirect to Shareus monetized link
+      window.location.href = shareusApiUrl;
     }
 
     // Particle background script
